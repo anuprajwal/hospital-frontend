@@ -90,7 +90,7 @@ export const hospitalEndpoints = {
     if (params.limit) query.append('limit', params.limit);
 
     const queryString = query.toString();
-    const endpoint = `/api/hospital/doctors${queryString ? `?${queryString}` : ''}`;
+    const endpoint = `/api/hospital/get-doctors${queryString ? `?${queryString}` : ''}`;
     
     return makeRequest(endpoint, { method: 'GET' });
   }
