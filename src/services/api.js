@@ -79,4 +79,20 @@ export const hospitalEndpoints = {
 
   // Staff Sub-System Directory
   getStaff: (hospitalId) => makeRequest(`/api/filter/get-hospital-doctors/${hospitalId}`, { method: 'GET' })
+
+  // Dynamic Staff/Doctor Registry Fetching
+  getDoctors: (params = {}) => {
+    const query = new URLSearchParams();
+    
+    if (params.search) query.append('search', params.search);
+    if (params.verified !== undefined && params.verified !== '') query.append('verified', params.verified);
+    if (params.request_status) query.append('request_status', params.request_status);
+    if (params.page) query.append('page', params.page);
+    if (params.limit) query.append('limit', params.limit);
+
+    const queryString = query.toString();
+    const endpoint = `/api/organisation/doctors${queryString ? `?${queryString}` : ''}`;
+    
+    return makeRequest(endpoint, { method: 'GET' });
+  }
 };
