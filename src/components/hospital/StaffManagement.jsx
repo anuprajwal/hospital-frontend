@@ -12,7 +12,6 @@ import {
   ArrowRight, 
   ChevronLeft, 
   ChevronRight,
-  Filter,
   UserX
 } from 'lucide-react';
 
@@ -34,10 +33,9 @@ export default function StaffManagement({ onSelectDoctor }) {
     total_pages: 1
   });
 
-  // Debounced search trigger / Effect fetch
   useEffect(() => {
     const handler = setTimeout(() => {
-      fetchDoctors(1); // Reset to page 1 on search/filter changes
+      fetchDoctors(1);
     }, 300);
 
     return () => clearTimeout(handler);
@@ -75,65 +73,70 @@ export default function StaffManagement({ onSelectDoctor }) {
   };
 
   const getRequestBadge = (status) => {
+    if (!status) {
+      return (
+        <span className="inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
+          No Direct Request
+        </span>
+      );
+    }
     switch (status) {
       case 'accepted':
         return (
-          <span class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <CheckCircle class="h-3 w-3" /> Accepted
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <CheckCircle className="h-3 w-3" /> Accepted
           </span>
         );
       case 'pending':
         return (
-          <span class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-            <Clock class="h-3 w-3" /> Pending
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+            <Clock className="h-3 w-3" /> Pending
           </span>
         );
       case 'rejected':
         return (
-          <span class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
-            <XCircle class="h-3 w-3" /> Rejected
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+            <XCircle className="h-3 w-3" /> Rejected
           </span>
         );
       default:
         return (
-          <span class="inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
-            {status || 'N/A'}
+          <span className="inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+            {status}
           </span>
         );
     }
   };
 
   return (
-    <div class="space-y-6">
-      {/* Page Header */}
+    <div className="space-y-6">
+      {/* Header */}
       <div>
-        <h1 class="text-2xl font-bold text-slate-900">Staff Registry</h1>
-        <p class="text-sm text-slate-500">Manage attached medical personnel, request statuses, and clinical specializations.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Staff Registry</h1>
+        <p className="text-sm text-slate-500">Manage attached medical personnel, verification statuses, and clinical parameters.</p>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          {/* Search Input */}
-          <div class="md:col-span-2 relative">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
-              <Search class="h-4 w-4" />
+      {/* Filter Bar */}
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div className="md:col-span-2 relative">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+              <Search className="h-4 w-4" />
             </span>
             <input
               type="text"
               placeholder="Search by email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500 transition-colors"
             />
           </div>
 
-          {/* Verified Filter */}
-          <div class="relative">
+          <div className="relative">
             <select
               value={verifiedFilter}
               onChange={(e) => setVerifiedFilter(e.target.value)}
-              class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500 transition-colors"
             >
               <option value="">All Verification Statuses</option>
               <option value="true">Verified Doctors</option>
@@ -141,12 +144,11 @@ export default function StaffManagement({ onSelectDoctor }) {
             </select>
           </div>
 
-          {/* Request Status Filter */}
-          <div class="relative">
+          <div className="relative">
             <select
               value={requestStatusFilter}
               onChange={(e) => setRequestStatusFilter(e.target.value)}
-              class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500 transition-colors"
             >
               <option value="">All Request Statuses</option>
               <option value="accepted">Accepted Requests</option>
@@ -159,75 +161,89 @@ export default function StaffManagement({ onSelectDoctor }) {
 
       <Alert type="error" message={error} />
 
-      {/* Main Content Grid */}
+      {/* Doctor Cards Grid */}
       {loading ? (
         <Loader size="lg" />
       ) : doctors.length === 0 ? (
-        <div class="text-center py-16 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <UserX class="h-12 w-12 text-slate-300 mx-auto mb-3" />
-          <p class="text-sm font-semibold text-slate-700">No Doctors Found</p>
-          <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">Try adjusting your search terms or clearing specific status filters.</p>
+        <div className="text-center py-16 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <UserX className="h-12 w-12 text-slate-300 mx-auto mb-3" />
+          <p className="text-sm font-semibold text-slate-700">No Doctors Found</p>
+          <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">Try adjusting your search terms or filters.</p>
         </div>
       ) : (
         <>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {doctors.map((doc) => {
               const profile = doc.doctorProfile || {};
               const request = doc.organisationRequests?.[0] || {};
+              const isVerified = profile.verified_status;
 
               return (
                 <div 
                   key={doc.id} 
-                  class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden"
+                  className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden"
                 >
-                  <div class="p-5 space-y-4">
+                  <div className="p-5 space-y-4">
                     {/* Header Details */}
-                    <div class="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 class="font-bold text-slate-900 text-base">
-                          {profile.full_name || doc.username}
-                        </h3>
-                        <p class="text-xs text-blue-600 font-semibold mt-0.5">
-                          {profile.specialization || 'General Physician'}
-                        </p>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={profile.profile_picture || 'https://res.cloudinary.com/dwshjkk42/image/upload/v1751270760/doctor_8997187_mgopyu.png'} 
+                          alt={doc.username} 
+                          className="h-12 w-12 rounded-full object-cover border border-slate-200 bg-slate-100 shrink-0"
+                        />
+                        <div>
+                          <h3 className="font-bold text-slate-900 text-base">
+                            {doc.username}
+                          </h3>
+                          <p className="text-xs text-blue-600 font-semibold mt-0.5">
+                            {profile.specialization || 'General Practitioner'}
+                          </p>
+                        </div>
                       </div>
                       {getRequestBadge(request.request_status)}
                     </div>
 
-                    {/* Metadata List */}
-                    <div class="space-y-2 border-t border-slate-100 pt-3 text-xs">
-                      <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Email:</span>
-                        <span class="font-medium truncate max-w-[170px]">{doc.email}</span>
+                    {/* Metadata List mapped to actual payload */}
+                    <div className="space-y-2 border-t border-slate-100 pt-3 text-xs">
+                      <div className="flex justify-between text-slate-600">
+                        <span className="text-slate-400">Email:</span>
+                        <span className="font-medium truncate max-w-[170px]">{doc.email}</span>
                       </div>
-                      <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Phone:</span>
-                        <span class="font-medium">{doc.phone_number || 'N/A'}</span>
+                      <div className="flex justify-between text-slate-600">
+                        <span className="text-slate-400">Phone:</span>
+                        <span className="font-medium">{doc.phone_number || 'N/A'}</span>
                       </div>
-                      <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Consultation Fee:</span>
-                        <span class="font-semibold text-slate-800">
-                          {profile.consultation_fee ? `₹${profile.consultation_fee}` : 'N/A'}
+                      <div className="flex justify-between text-slate-600">
+                        <span className="text-slate-400">Experience:</span>
+                        <span className="font-medium">
+                          {profile.experience_years ? `${profile.experience_years} Years` : 'Not specified'}
                         </span>
                       </div>
-                      <div class="flex justify-between text-slate-600 items-center">
-                        <span class="text-slate-400">Doctor Status:</span>
-                        <span className={`inline-flex items-center gap-1 font-semibold text-[11px] ${profile.is_verified ? 'text-emerald-600' : 'text-amber-600'}`}>
-                          {profile.is_verified ? <UserCheck class="h-3 w-3" /> : <ShieldAlert class="h-3 w-3" />}
-                          {profile.is_verified ? 'Verified Profile' : 'Unverified'}
+                      <div className="flex justify-between text-slate-600">
+                        <span className="text-slate-400">Consultation Fee:</span>
+                        <span className="font-semibold text-slate-800">
+                          {profile.consultation_fee ? `₹${parseFloat(profile.consultation_fee).toFixed(2)}` : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-slate-600 items-center">
+                        <span className="text-slate-400">Doctor Verification:</span>
+                        <span className={`inline-flex items-center gap-1 font-semibold text-[11px] ${isVerified ? 'text-emerald-600' : 'text-amber-600'}`}>
+                          {isVerified ? <UserCheck className="h-3 w-3" /> : <ShieldAlert className="h-3 w-3" />}
+                          {isVerified ? 'Verified' : 'Pending Verification'}
                         </span>
                       </div>
                     </div>
                   </div>
 
                   {/* Card Footer Action */}
-                  <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                    <span class="text-[11px] text-slate-400">ID: #{doc.id}</span>
+                  <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400">ID: #{doc.id}</span>
                     <button
                       onClick={() => onSelectDoctor(doc)}
-                      class="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                      className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-semibold transition-colors"
                     >
-                      View Full Details <ArrowRight class="h-3.5 w-3.5" />
+                      View Full Details <ArrowRight className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
@@ -235,26 +251,26 @@ export default function StaffManagement({ onSelectDoctor }) {
             })}
           </div>
 
-          {/* Pagination Controls */}
+          {/* Pagination */}
           {pagination.total_pages > 1 && (
-            <div class="flex items-center justify-between bg-white px-4 py-3 rounded-xl border border-slate-200 shadow-sm mt-4">
-              <div class="text-xs text-slate-500">
-                Showing page <span class="font-bold text-slate-700">{pagination.page}</span> of <span class="font-bold text-slate-700">{pagination.total_pages}</span> ({pagination.total_records} records)
+            <div className="flex items-center justify-between bg-white px-4 py-3 rounded-xl border border-slate-200 shadow-sm mt-4">
+              <div className="text-xs text-slate-500">
+                Page <span className="font-bold text-slate-700">{pagination.page}</span> of <span className="font-bold text-slate-700">{pagination.total_pages}</span> ({pagination.total_records} records)
               </div>
-              <div class="flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronLeft class="h-4 w-4" />
+                  <ChevronLeft className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.total_pages}
-                  class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronRight class="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
             </div>
