@@ -7,6 +7,6 @@ export default defineConfig({
     port: 7002,
     strictPort: true,
     host: true,
-    allowedHosts: ['hospitals.docapp.co.in', 'localhost']
+    allowedHosts: ['hospitals.docapp.co.in']
   }
 });

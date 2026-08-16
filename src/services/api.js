@@ -37,7 +37,6 @@ const makeRequest = async (endpoint, options = {}) => {
     }
 
     if (!response.ok) {
-      // Automatic session destruction on expired or invalid token strings
       if (response.status === 401 || (responseData && responseData.error === 'jwt expired')) {
         document.cookie = 'auth_token=; path=/; domain=.docapp.co.in; expires=Thu, 01 Jan 1970 00:00:00 GMT';
         window.location.reload();
@@ -78,5 +77,21 @@ export const hospitalEndpoints = {
   verifyOtp: (payload) => makeRequest('/api/verify/verifyEmailMobile', { method: 'PUT', body: payload }),
 
   // Staff Sub-System Directory
-  getStaff: (hospitalId) => makeRequest(`/api/filter/get-hospital-doctors/${hospitalId}`, { method: 'GET' })
+  getStaff: (hospitalId) => makeRequest(`/api/filter/get-hospital-doctors/${hospitalId}`, { method: 'GET' }), // Added missing comma here!
+
+  // Dynamic Staff/Doctor Registry Fetching
+  getDoctors: (params = {}) => {
+    const query = new URLSearchParams();
+    
+    if (params.search) query.append('search', params.search);
+    if (params.verified !== undefined && params.verified !== '') query.append('verified', params.verified);
+    if (params.request_status) query.append('request_status', params.request_status);
+    if (params.page) query.append('page', params.page);
+    if (params.limit) query.append('limit', params.limit);
+
+    const queryString = query.toString();
+    const endpoint = `/api/hospital/get-doctors${queryString ? `?${queryString}` : ''}`;
+    
+    return makeRequest(endpoint, { method: 'GET' });
+  }
 };

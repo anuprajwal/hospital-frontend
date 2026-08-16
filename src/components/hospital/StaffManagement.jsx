@@ -22,6 +22,8 @@ export default function StaffManagement({ onSelectDoctor }) {
   
   // Filter States
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [requestStatusFilter, setRequestStatusFilter] = useState('');
   
   // Pagination State
   const [pagination, setPagination] = useState({
@@ -37,7 +39,8 @@ export default function StaffManagement({ onSelectDoctor }) {
     }, 300);
 
     return () => clearTimeout(handler);
-  }, [searchTerm]);
+
+  }, [searchTerm, requestStatusFilter]);
 
   const fetchDoctors = async (targetPage = pagination.page) => {
     setLoading(true);
@@ -45,6 +48,7 @@ export default function StaffManagement({ onSelectDoctor }) {
     try {
       const res = await hospitalEndpoints.getDoctors({
         search: searchTerm,
+        request_status: requestStatusFilter,
         page: targetPage,
         limit: pagination.limit
       });
@@ -128,7 +132,18 @@ export default function StaffManagement({ onSelectDoctor }) {
             />
           </div>
 
-          
+          <div className="relative">
+            <select
+              value={requestStatusFilter}
+              onChange={(e) => setRequestStatusFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500 transition-colors"
+            >
+              <option value="">All Request Statuses</option>
+              <option value="accepted">Accepted Requests</option>
+              <option value="pending">Pending Requests</option>
+              <option value="rejected">Rejected Requests</option>
+            </select>
+          </div>
         </div>
       </div>
 
