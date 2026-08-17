@@ -390,6 +390,8 @@ export default function HospitalKycAndBankingPage() {
                     <option value="trust">Trust / NGO</option>
                     <option value="society">Society</option>
                     <option value="proprietorship">Sole Proprietorship</option>
+                    <option value="individual">beta testing</option>
+                    
                   </select>
                 </div>
               </div>
