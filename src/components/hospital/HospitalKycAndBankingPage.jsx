@@ -383,10 +383,13 @@ export default function HospitalKycAndBankingPage() {
                     onChange={handleKycChange}
                     className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none focus:border-blue-500"
                   >
-                    <option value="hospital">Hospital</option>
-                    <option value="clinic">Clinic</option>
-                    <option value="private_limited">Private Limited</option>
+                    <option value="private_limited">Private Limited Company</option>
+                    <option value="public_limited">Public Limited Company</option>
                     <option value="partnership">Partnership</option>
+                    <option value="llp">Limited Liability Partnership (LLP)</option>
+                    <option value="trust">Trust / NGO</option>
+                    <option value="society">Society</option>
+                    <option value="proprietorship">Sole Proprietorship</option>
                   </select>
                 </div>
               </div>
