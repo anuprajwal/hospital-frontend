@@ -60,13 +60,13 @@ const makeRequest = async (endpoint, options = {}) => {
 export const paymentService = {
   // Hospital KYC & Onboarding Endpoints
   startHospitalOnboarding: (hospitalId, payload) =>
-    makeRequest(`/api/payment/hospital/${hospitalId}/start-onboarding`, {
+    makeRequest(`/api/kyc/hospital/${hospitalId}/start-onboarding`, {
       method: 'POST',
       body: payload
     }),
 
   getHospitalOnboardingStatus: (hospitalId) =>
-    makeRequest(`/api/payment/hospital/${hospitalId}/onboarding-status`, {
+    makeRequest(`/api/kyc/hospital/${hospitalId}/onboarding-status`, {
       method: 'GET'
     }),
 
