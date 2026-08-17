@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://apis.docapp.co.in';
 
 const getCookieToken = () => {
   const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
@@ -77,12 +77,11 @@ export const hospitalEndpoints = {
   verifyOtp: (payload) => makeRequest('/api/verify/verifyEmailMobile', { method: 'PUT', body: payload }),
 
   // Staff Sub-System Directory
-  getStaff: (hospitalId) => makeRequest(`/api/filter/get-hospital-doctors/${hospitalId}`, { method: 'GET' }), // Added missing comma here!
+  getStaff: (hospitalId) => makeRequest(`/api/filter/get-hospital-doctors/${hospitalId}`, { method: 'GET' }),
 
   // Dynamic Staff/Doctor Registry Fetching
   getDoctors: (params = {}) => {
     const query = new URLSearchParams();
-    
     if (params.search) query.append('search', params.search);
     if (params.verified !== undefined && params.verified !== '') query.append('verified', params.verified);
     if (params.request_status) query.append('request_status', params.request_status);
@@ -90,8 +89,9 @@ export const hospitalEndpoints = {
     if (params.limit) query.append('limit', params.limit);
 
     const queryString = query.toString();
-    const endpoint = `/api/hospital/get-doctors${queryString ? `?${queryString}` : ''}`;
-    
-    return makeRequest(endpoint, { method: 'GET' });
-  }
+    return makeRequest(`/api/hospital/get-doctors${queryString ? `?${queryString}` : ''}`, { method: 'GET' });
+  },
+
+  // Admission Action Endpoint (Accept / Reject)
+  reactToAdmission: (payload) => makeRequest('/api/hospital/react-to-admission', { method: 'PUT', body: payload })
 };
