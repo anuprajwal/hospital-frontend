@@ -7,6 +7,11 @@ export default defineConfig({
     port: 7002,
     strictPort: true,
     host: true,
-    allowedHosts: ['hospitals.docapp.co.in']
+    allowedHosts: ['hospitals.docapp.co.in'],
+    hmr: {
+      host: 'hospitals.docapp.co.in',
+      protocol: 'wss',
+      clientPort: 443,
+    },
   }
 });
