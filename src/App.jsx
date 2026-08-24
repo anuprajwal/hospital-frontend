@@ -1,5 +1,3 @@
-// src/App.jsx
-
 import React, { useState, useEffect } from 'react';
 import ProfileManagement from './components/hospital/ProfileManagement';
 import StaffManagement from './components/hospital/StaffManagement';
