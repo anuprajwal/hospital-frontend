@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// src/App.jsx
+
+import React, { useState, useEffect } from 'react';
 import ProfileManagement from './components/hospital/ProfileManagement';
 import StaffManagement from './components/hospital/StaffManagement';
 import DoctorDetailPage from './components/hospital/DoctorDetailPage';
@@ -7,8 +9,47 @@ import HospitalKycAndBankingPage from './components/hospital/HospitalKycAndBanki
 import { Building2, Users2, CalendarDays, ShieldCheck, LogOut } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('staff');
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  // 1. Read initial view and selection parameters from URL query string
+  const getUrlState = () => {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      activeTab: params.get('tab') || 'staff',
+      selectedDoctor: params.get('doctorId') ? { id: params.get('doctorId') } : null,
+    };
+  };
+
+  const initialUrlState = getUrlState();
+  const [activeTab, setActiveTab] = useState(initialUrlState.activeTab);
+  const [selectedDoctor, setSelectedDoctor] = useState(initialUrlState.selectedDoctor);
+
+  // 2. Synchronize navigation state changes directly to the URL query string
+  const navigateTo = (newTab, data = {}) => {
+    const params = new URLSearchParams();
+    params.set('tab', newTab);
+
+    if (data.doctor) {
+      params.set('doctorId', data.doctor.id || data.doctor);
+      setSelectedDoctor(data.doctor);
+    } else {
+      setSelectedDoctor(null);
+    }
+
+    setActiveTab(newTab);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
+  };
+
+  // 3. Listen for browser Back/Forward navigation actions
+  useEffect(() => {
+    const handlePopState = () => {
+      const state = getUrlState();
+      setActiveTab(state.activeTab);
+      setSelectedDoctor(state.selectedDoctor);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const handleLogout = () => {
     document.cookie = 'auth_token=; path=/; domain=.docapp.co.in; expires=Thu, 01 Jan 1970 00:00:00 GMT';
@@ -30,7 +71,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <div 
             className="flex items-center gap-2.5 cursor-pointer"
-            onClick={() => { setActiveTab('staff'); setSelectedDoctor(null); }}
+            onClick={() => navigateTo('staff')}
           >
             <div className="p-2 bg-blue-600 rounded-lg text-white">
               <Building2 className="h-5 w-5" />
@@ -50,7 +91,7 @@ export default function App() {
               return (
                 <button 
                   key={item.id}
-                  onClick={() => { setActiveTab(item.id); setSelectedDoctor(null); }} 
+                  onClick={() => navigateTo(item.id)} 
                   className={`px-4 h-16 flex items-center gap-2 text-xs font-semibold border-b-2 transition-all ${
                     isActive 
                       ? 'border-blue-500 text-white bg-slate-800/50' 
@@ -82,11 +123,11 @@ export default function App() {
           selectedDoctor ? (
             <DoctorDetailPage 
               doctor={selectedDoctor} 
-              onBack={() => setSelectedDoctor(null)}
-              onStatusUpdated={() => setSelectedDoctor(null)}
+              onBack={() => navigateTo('staff')}
+              onStatusUpdated={() => navigateTo('staff')}
             />
           ) : (
-            <StaffManagement onSelectDoctor={(doc) => setSelectedDoctor(doc)} />
+            <StaffManagement onSelectDoctor={(doc) => navigateTo('staff', { doctor: doc })} />
           )
         )}
         
