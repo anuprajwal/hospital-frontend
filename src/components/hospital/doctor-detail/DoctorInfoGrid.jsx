@@ -1,7 +1,37 @@
 import React from 'react';
 import { User, ShieldCheck, Mail, Phone, CreditCard } from 'lucide-react';
 
+
+const formatDoctorExperience = (practiceStartDate) => {
+  if (practiceStartDate) {
+    const [startYear, startMonth] = practiceStartDate.slice(0, 7).split('-').map(Number);
+    if (startYear && startMonth) {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth() + 1;
+
+      const totalMonths = (currentYear - startYear) * 12 + (currentMonth - startMonth);
+      if (totalMonths < 0) return 'Practice starts soon';
+
+      const years = Math.floor(totalMonths / 12);
+      const months = totalMonths % 12;
+
+      const yearStr = years > 0 ? `${years} ${years === 1 ? 'Year' : 'Years'}` : '';
+      const monthStr = months > 0 ? `${months} ${months === 1 ? 'Month' : 'Months'}` : '';
+
+      if (yearStr && monthStr) return `${yearStr}, ${monthStr} Experience`;
+      if (yearStr) return `${yearStr} Experience`;
+      if (monthStr) return `${monthStr} Experience`;
+      return '< 1 Month Experience';
+    }
+  }
+
+  return 'Experience not specified';
+};
+
+
 export default function DoctorInfoGrid({ doctor, profile }) {
+  const expText = formatDoctorExperience(profile.practice_start_date || profile?.practice_start_date);
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -17,7 +47,7 @@ export default function DoctorInfoGrid({ doctor, profile }) {
             </div>
             <div className="flex justify-between py-1 border-b border-slate-200/60">
               <span className="text-slate-500">Experience:</span>
-              <span className="font-semibold text-slate-800">{profile.experience_years ? `${profile.experience_years} Years` : 'N/A'}</span>
+              <span className="font-semibold text-slate-800">{expText}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-200/60">
               <span className="text-slate-500">Consultation Fee:</span>

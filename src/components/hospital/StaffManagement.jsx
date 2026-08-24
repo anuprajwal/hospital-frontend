@@ -15,6 +15,34 @@ import {
   UserX
 } from 'lucide-react';
 
+
+const formatDoctorExperience = (practiceStartDate) => {
+  if (practiceStartDate) {
+    const [startYear, startMonth] = practiceStartDate.slice(0, 7).split('-').map(Number);
+    if (startYear && startMonth) {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth() + 1;
+
+      const totalMonths = (currentYear - startYear) * 12 + (currentMonth - startMonth);
+      if (totalMonths < 0) return 'Practice starts soon';
+
+      const years = Math.floor(totalMonths / 12);
+      const months = totalMonths % 12;
+
+      const yearStr = years > 0 ? `${years} ${years === 1 ? 'Year' : 'Years'}` : '';
+      const monthStr = months > 0 ? `${months} ${months === 1 ? 'Month' : 'Months'}` : '';
+
+      if (yearStr && monthStr) return `${yearStr}, ${monthStr} Experience`;
+      if (yearStr) return `${yearStr} Experience`;
+      if (monthStr) return `${monthStr} Experience`;
+      return '< 1 Month Experience';
+    }
+  }
+
+  return 'Experience not specified';
+};
+
 export default function StaffManagement({ onSelectDoctor }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -166,6 +194,9 @@ export default function StaffManagement({ onSelectDoctor }) {
               const request = doc.organisationRequests?.[0] || {};
               const isVerified = profile.verified_status;
 
+              const startDate = profile.practice_start_date || profile?.practice_start_date;
+              const expText = formatDoctorExperience(startDate);
+
               return (
                 <div 
                   key={doc.id} 
@@ -205,7 +236,7 @@ export default function StaffManagement({ onSelectDoctor }) {
                       <div className="flex justify-between text-slate-600">
                         <span className="text-slate-400">Experience:</span>
                         <span className="font-medium">
-                          {profile.experience_years ? `${profile.experience_years} Years` : 'Not specified'}
+                          {expText}
                         </span>
                       </div>
                       <div className="flex justify-between text-slate-600">
