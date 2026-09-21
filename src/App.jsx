@@ -144,7 +144,7 @@ import DoctorDetailPage from './components/hospital/DoctorDetailPage';
 import AppointmentManagement from './components/hospital/AppointmentManagement';
 import AppointmentDetailPage from './components/hospital/AppointmentDetailPage';
 import HospitalKycAndBankingPage from './components/hospital/HospitalKycAndBankingPage';
-import PaymentsSettings from './components/hospital/PaymentsSettings';
+import PaymentsSettings from './components/hospital/PaymentSettings';
 import { Building2, Users2, CalendarDays, ShieldCheck, CreditCard, LogOut } from 'lucide-react';
 
 export default function App() {
