@@ -82,7 +82,7 @@ export default function HospitalKycAndBankingPage() {
             primaryAddress = addrList[0];
           }
         } catch (e) {
-          // Fallback to empty address
+          console.log(e)
         }
 
         // Pre-fill KYC form
@@ -90,7 +90,7 @@ export default function HospitalKycAndBankingPage() {
           ...prev,
           legal_business_name: orgProfile.organisation_name || prev.legal_business_name,
           contact_name: userData.username || prev.contact_name,
-          business_type: 'individual', // Razorpay requires 'individual' for hospitals
+          business_type: 'individual',
           address_line1: primaryAddress.street ? `${primaryAddress.house_no ? primaryAddress.house_no + ', ' : ''}${primaryAddress.street}` : prev.address_line1,
           city: primaryAddress.city || prev.city,
           state: primaryAddress.state || prev.state,

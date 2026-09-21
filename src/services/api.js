@@ -97,5 +97,9 @@ export const hospitalEndpoints = {
   },
 
   // Admission Action Endpoint (Accept / Reject)
-  reactToAdmission: (payload) => makeRequest('/api/hospital/react-to-admission', { method: 'PUT', body: payload })
+  reactToAdmission: (payload) => makeRequest('/api/hospital/react-to-admission', { method: 'PUT', body: payload }),
+
+  getAppointments: (limit = 10, offset = 0) => {
+    return makeRequest(`/api/appointment/list-appointments?limit=${limit}&offset=${offset}`, { method: 'GET' });
+  }
 };
