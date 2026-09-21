@@ -101,7 +101,7 @@ export default function PaymentsSettings() {
     setError(null);
     try {
       // 1. Fetch User Profile Data
-      const profileRes = await paymentsEndpoints.getProfileData();
+      const profileRes = await paymentsEndpoints.getProfile();
       const userData = profileRes?.data?.userData;
 
       if (userData) {
