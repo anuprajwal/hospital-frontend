@@ -1,3 +1,24 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  CalendarRange, 
+  Activity, 
+  ShieldCheck, 
+  Clipboard, 
+  ChevronLeft, 
+  ChevronRight, 
+  User, 
+  Stethoscope, 
+  Clock, 
+  ArrowLeft, 
+  Wrench, 
+  Phone, 
+  Mail, 
+  Search, 
+  RefreshCw,
+  AlertCircle
+} from 'lucide-react';
+import { hospitalEndpoints } from '../../services/api';
+
 export default function AppointmentManagement() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
