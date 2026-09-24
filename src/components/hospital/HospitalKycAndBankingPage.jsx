@@ -139,7 +139,7 @@ export default function HospitalKycAndBankingPage() {
       }
     } catch (err) {
       setStatus({
-        error: err.response?.data?.message || 'KYC submission failed. Please verify your business and bank details.',
+        error: err.response?.data?.error?.description || 'KYC submission failed. Please verify your business and bank details.',
         success: null
       });
     } finally {
