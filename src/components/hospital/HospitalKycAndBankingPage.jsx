@@ -12,6 +12,12 @@ export default function HospitalKycAndBankingPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [status, setStatus] = useState({ error: null, success: null });
 
+  useEffect(() => {
+      if (error || success) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, [error, success]);
+
   // Bank Details State
   const [bankData, setBankData] = useState({
     account_number: '',
