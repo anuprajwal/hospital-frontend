@@ -16,7 +16,7 @@ export default function HospitalKycAndBankingPage() {
       if (error || success) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    }, [error, success]);
+    }, [status.error, status.success]);
 
   // Bank Details State
   const [bankData, setBankData] = useState({
