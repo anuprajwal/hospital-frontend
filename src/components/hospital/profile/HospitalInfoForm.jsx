@@ -2,8 +2,39 @@ import React from 'react';
 import { Building, Check } from 'lucide-react';
 
 export default function HospitalInfoForm({ profileForm, setProfileForm, onSubmit }) {
-  const serviceOptions = ["physiotherapy", "psycology", "cardiology", "pediatrition", "neurology", "orthopedics"];
-
+  const serviceOptions = [
+  "Ayurveda",
+  "Cardiology",
+  "Dentistry",
+  "Dermatology",
+  "Diabetology",
+  "Diet & Nutrition",
+  "Endocrinology",
+  "ENT",
+  "Gastroenterology",
+  "General Physician",
+  "General Surgery",
+  "Gynecology",
+  "Homeopathy",
+  "Internal Medicine",
+  "Nephrology",
+  "Neurology",
+  "Obstetrics",
+  "Oncology",
+  "Ophthalmology",
+  "Orthopedics",
+  "Pediatrics",
+  "Physiotherapy",
+  "Plastic Surgery",
+  "Psychiatry",
+  "Psychology",
+  "Pulmonology",
+  "Rheumatology",
+  "Sexology",
+  "Siddha",
+  "Unani",
+  "Urology"
+];
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
       <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">

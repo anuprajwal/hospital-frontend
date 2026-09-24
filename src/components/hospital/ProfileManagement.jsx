@@ -215,6 +215,13 @@ export default function ProfileManagement() {
 
   if (loading) return <Loader size="lg" />;
 
+  // Auto-scroll to top whenever an error or success message is displayed
+  useEffect(() => {
+    if (error || success) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [error, success]);
+
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
