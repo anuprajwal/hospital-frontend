@@ -38,7 +38,7 @@ const makeRequest = async (endpoint, options = {}) => {
 
     if (!response.ok) {
       // Graceful redirect to login instead of an infinite reload loop
-      if (response.status === 401 || (responseData && responseData.error === 'jwt expired')) {
+      if (response.status === 401 || response.status === 403 || (responseData && responseData.error === 'jwt expired')) {
         document.cookie = 'auth_token=; path=/; domain=.docapp.co.in; expires=Thu, 01 Jan 1970 00:00:00 GMT';
         document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
         window.location.href = 'https://auth.docapp.co.in'; // Redirect to login
