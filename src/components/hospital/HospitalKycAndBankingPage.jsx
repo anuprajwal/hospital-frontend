@@ -13,7 +13,7 @@ export default function HospitalKycAndBankingPage() {
   const [status, setStatus] = useState({ error: null, success: null });
 
   useEffect(() => {
-      if (error || success) {
+      if (status.error || status.success) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }, [status.error, status.success]);
