@@ -6,9 +6,12 @@ import AppointmentManagement from './components/hospital/AppointmentManagement';
 import AppointmentDetailPage from './components/hospital/AppointmentDetailPage';
 import HospitalKycAndBankingPage from './components/hospital/HospitalKycAndBankingPage';
 import PaymentsSettings from './components/hospital/PaymentSettings';
-import { Building2, Users2, CalendarDays, ShieldCheck, CreditCard, LogOut } from 'lucide-react';
+import { Building2, Users2, CalendarDays, ShieldCheck, CreditCard, LogOut, Menu, X } from 'lucide-react';
 
 export default function App() {
+  // Mobile menu state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   // 1. Read initial view and selection parameters from URL query string
   const getUrlState = () => {
     const params = new URLSearchParams(window.location.search);
@@ -46,6 +49,7 @@ export default function App() {
     setActiveTab(newTab);
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.pushState({}, '', newUrl);
+    setMobileMenuOpen(false); // Close mobile menu on navigation
   };
 
   // 3. Listen for browser Back/Forward navigation actions
@@ -95,7 +99,8 @@ export default function App() {
             </div>
           </div>
           
-          <nav className="flex h-full items-center">
+          {/* Desktop Navigation Tabs */}
+          <nav className="hidden md:flex h-full items-center">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -115,15 +120,58 @@ export default function App() {
             })}
           </nav>
 
-          <div className="flex items-center">
+          {/* Desktop Logout & Mobile Hamburger Button Container */}
+          <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center">
+              <button 
+                onClick={handleLogout} 
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:text-white hover:bg-rose-600/20 border border-rose-500/20 transition-all"
+              >
+                <LogOut className="h-4 w-4" /> Logout
+              </button>
+            </div>
+
+            {/* Mobile Menu Toggle Button (3 lines / X icon) */}
             <button 
-              onClick={handleLogout} 
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:text-white hover:bg-rose-600/20 border border-rose-500/20 transition-all"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+              className="md:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none transition-all"
+              aria-label="Toggle navigation menu"
             >
-              <LogOut className="h-4 w-4" /> Logout
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-slate-900 border-t border-slate-800 px-4 pt-3 pb-4 space-y-1 shadow-2xl animate-fadeIn">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button 
+                  key={item.id}
+                  onClick={() => navigateTo(item.id)} 
+                  className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all ${
+                    isActive 
+                      ? 'bg-blue-600 text-white shadow-md' 
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  }`}
+                >
+                  <Icon className="h-5 w-5" /> {item.label}
+                </button>
+              );
+            })}
+            <div className="pt-2 border-t border-slate-800 mt-2">
+              <button 
+                onClick={handleLogout} 
+                className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-rose-400 hover:bg-rose-600/20 hover:text-white transition-all"
+              >
+                <LogOut className="h-5 w-5" /> Logout
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Main Content Area */}
