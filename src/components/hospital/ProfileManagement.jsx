@@ -113,6 +113,7 @@ export default function ProfileManagement() {
       if (Array.isArray(addrList) && addrList.length > 0) {
         const primaryAddr = addrList[0];
         setAddress({
+          id: primaryAddr.id,
           street: primaryAddr.street || '',
           city: primaryAddr.city || '',
           state: primaryAddr.state || '',
