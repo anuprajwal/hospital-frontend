@@ -2,30 +2,34 @@ import React from 'react';
 import { Shield } from 'lucide-react';
 
 export default function HospitalVerificationCard({ verification, setVerification, onSendOtp, onVerifyOtp }) {
-  const handleEmailInputChange = (value, verification) => {
-    
-    if (rawValue !== '' && !/^\d+$/.test(rawValue)) {
+  const handleEmailInputChange = (value) => {
+    // Check for non-numeric characters
+    if (value !== '' && !/^\d+$/.test(value)) {
+      setVerification(prev => ({ ...prev, emailError: 'Please enter numbers only' }));
       return;
     }
     // Check for length exceeding 6 characters
-    if (rawValue.length > 6) {
+    if (value.length > 6) {
+      setVerification(prev => ({ ...prev, emailError: 'OTP cannot exceed 6 digits' }));
       return;
     }
 
-    setVerification({ ...verification, emailOtp: value });
+    setVerification(prev => ({ ...prev, emailOtp: value, emailError: null }));
   };
 
-  const handleMobileInputChange = (value, verification) => {
-    
-    if (rawValue !== '' && !/^\d+$/.test(rawValue)) {
+  const handleMobileInputChange = (value) => {
+    // Check for non-numeric characters
+    if (value !== '' && !/^\d+$/.test(value)) {
+      setVerification(prev => ({ ...prev, phoneError: 'Please enter numbers only' }));
       return;
     }
     // Check for length exceeding 6 characters
-    if (rawValue.length > 6) {
+    if (value.length > 6) {
+      setVerification(prev => ({ ...prev, phoneError: 'OTP cannot exceed 6 digits' }));
       return;
     }
 
-    setVerification({ ...verification, phoneOtp: value });
+    setVerification(prev => ({ ...prev, phoneOtp: value, phoneError: null }));
   };
 
   
