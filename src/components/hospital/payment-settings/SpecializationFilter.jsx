@@ -2,9 +2,37 @@ import React from 'react';
 import { Stethoscope } from 'lucide-react';
 
 const COMMON_SPECIALIZATIONS = [
-  "General Medicine", "Cardiology", "Neurology", "Physiotherapy",
-  "Pediatrics", "Dermatology", "Orthopedics", "Gynecology",
-  "ENT", "Ophthalmology", "Psychiatry"
+  "Ayurveda",
+  "Cardiology",
+  "Dentistry",
+  "Dermatology",
+  "Diabetology",
+  "Diet & Nutrition",
+  "Endocrinology",
+  "ENT",
+  "Gastroenterology",
+  "General Physician",
+  "General Surgery",
+  "Gynecology",
+  "Homeopathy",
+  "Internal Medicine",
+  "Nephrology",
+  "Neurology",
+  "Obstetrics",
+  "Oncology",
+  "Ophthalmology",
+  "Orthopedics",
+  "Pediatrics",
+  "Physiotherapy",
+  "Plastic Surgery",
+  "Psychiatry",
+  "Psychology",
+  "Pulmonology",
+  "Rheumatology",
+  "Sexology",
+  "Siddha",
+  "Unani",
+  "Urology"
 ];
 
 export default function SpecializationFilter({ selectedSpecs, toggleSpecialization }) {
