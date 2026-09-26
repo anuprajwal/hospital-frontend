@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { hospitalEndpoints as paymentsEndpoints } from '../../services/api';
 
-import ScopeSelector from './ScopeSelector';
-import SpecializationFilter from './SpecializationFilter';
-import DoctorSearchFilter from './DoctorSearchFilter';
-import FeeSlotConfigForm from './FeeSlotConfigForm';
-import PayoutLedgerCard from './PayoutLedgerCard';
-import ExistingSlotConfigsList from './ExistingSlotConfigsList';
+import ScopeSelector from './payment-settings/ScopeSelector';
+import SpecializationFilter from './payment-settings/SpecializationFilter';
+import DoctorSearchFilter from './payment-settings/DoctorSearchFilter';
+import FeeSlotConfigForm from './payment-settings/FeeSlotConfigForm';
+import PayoutLedgerCard from './payment-settings/PayoutLedgerCard';
+import ExistingSlotConfigsList from './payment-settings/ExistingSlotConfigsList';
 
 const calculateExperience = (establishmentYearString) => {
   if (!establishmentYearString) return 'N/A';
