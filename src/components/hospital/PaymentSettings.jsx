@@ -93,7 +93,7 @@ export default function PaymentsSettings() {
         const slotConfigRes = await paymentsEndpoints.getDoctorSlotConfig();
         setSlotConfigResponse(slotConfigRes);
 
-        const overall = slotConfigRes?.data?.overall;
+        const overall = slotConfigRes?.data?.data?.overall;
         if (overall) {
           let parsedOverall = typeof overall === 'string' ? JSON.parse(overall) : overall;
           if (Array.isArray(parsedOverall) && parsedOverall.length > 0) {

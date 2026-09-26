@@ -7,7 +7,6 @@ import { Stethoscope, User, Globe, Clock, IndianRupee } from 'lucide-react';
  */
 const parseConfigData = (rawData) => {
   if (!rawData || rawData === 'null' || rawData === '[]' || rawData === '{}') return [];
-  console.log('Parsing rawData:', rawData);
   let current = rawData;
 
 
@@ -61,12 +60,12 @@ export default function ExistingSlotConfigsList({ configResponse }) {
                   <div>
                     <p className="font-semibold text-slate-700">Hospital Global Default</p>
                     <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                      <Clock className="h-3 w-3" /> {overallConfigs.slot_time || overallConfigs.slotTime || 'N/A'} mins
+                      <Clock className="h-3 w-3" /> {overallConfigs.slot_time || 'N/A'} mins
                     </p>
                   </div>
                   <span className="font-bold text-blue-700 flex items-center text-sm">
                     <IndianRupee className="h-3.5 w-3.5" />
-                    {overallConfigs.slot_fee ?? overallConfigs.slotFee ?? '0'}
+                    {overallConfigs.slot_fee || '0'}
                   </span>
                 </div>
             </div>
