@@ -31,7 +31,7 @@ const parseConfigData = (rawData) => {
 };
 
 export default function ExistingSlotConfigsList({ configResponse }) {
-  const configData = configResponse.data
+  const configData = configResponse.data.data
     console.log('Received configResponse:', configResponse);
   console.log('Overall Config:', configData.overall);
   console.log('Specialisation Config:', configData.specialisation);
