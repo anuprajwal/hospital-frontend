@@ -13,7 +13,6 @@ const parseConfigData = (rawData) => {
 
   // Unroll double-stringified JSON if necessary
   while (typeof current === 'string') {
-    console.log('Current value before parsing:', current);
     try {
       const parsed = JSON.parse(current);
       if (parsed === current) break;
@@ -32,20 +31,10 @@ const parseConfigData = (rawData) => {
 
 export default function ExistingSlotConfigsList({ configResponse }) {
   const configData = configResponse.data.data
-    console.log('Received configResponse:', configResponse);
-  console.log('Overall Config:', configData.overall);
-  console.log('Specialisation Config:', configData.specialisation);
-  console.log('Individual Config:', configData.individual);
 
   const overallConfigs = parseConfigData(configData.overall);
   const specialisationConfigs = parseConfigData(configData.specialisation);
   const individualConfigs = parseConfigData(configData.individual);
-
-  console.log('Parsed Config Data:', {
-    overallConfigs,
-    specialisationConfigs,
-    individualConfigs
-  });
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-6">
@@ -66,7 +55,7 @@ export default function ExistingSlotConfigsList({ configResponse }) {
             </h3>
           </div>
 
-          {overallConfigs.length > 0 ? (
+          {overallConfigs ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 <div className="p-3 bg-blue-50/50 border border-blue-200 rounded-lg flex justify-between items-center text-xs">
                   <div>
