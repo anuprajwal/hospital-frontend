@@ -102,6 +102,8 @@ export const hospitalEndpoints = {
   getAppointments: (limit = 10, offset = 0) => {
     return makeRequest(`/api/appointment/list-appointments?limit=${limit}&offset=${offset}`, { method: 'GET' });
   },
-  setDoctorsSlotConfig: (payload) => makeRequest('/api/hospital/set-doctors-slot-config', { method: 'PUT', body: payload })
+  setDoctorsSlotConfig: (payload) => makeRequest('/api/hospital/set-doctors-slot-config', { method: 'PUT', body: payload }),
+
+  getDoctorSlotConfig: () => makeRequest('/api/hospital/get-doctors-slot-config', { method: 'GET'})
 
 };
