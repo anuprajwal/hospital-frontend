@@ -35,6 +35,12 @@ export default function ExistingSlotConfigsList({ configResponse }) {
   const specialisationConfigs = parseConfigData(configData.specialisation);
   const individualConfigs = parseConfigData(configData.individual);
 
+  console.log('Parsed Config Data:', {
+    overallConfigs,
+    specialisationConfigs,
+    individualConfigs
+  });
+
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-6">
       <div className="border-b border-slate-100 pb-3">
