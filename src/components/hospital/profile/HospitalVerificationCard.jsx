@@ -2,7 +2,7 @@ import React from 'react';
 import { Shield } from 'lucide-react';
 
 export default function HospitalVerificationCard({ verification, setVerification, onSendOtp, onVerifyOtp }) {
-  const handleInputChange = (field, value, verification) => {
+  const handleEmailInputChange = (value, verification) => {
     
     if (rawValue !== '' && !/^\d+$/.test(rawValue)) {
       return;
@@ -12,8 +12,23 @@ export default function HospitalVerificationCard({ verification, setVerification
       return;
     }
 
-    setVerification({ ...verification, [field]: value });
+    setVerification({ ...verification, emailOtp: value });
   };
+
+  const handleMobileInputChange = (value, verification) => {
+    
+    if (rawValue !== '' && !/^\d+$/.test(rawValue)) {
+      return;
+    }
+    // Check for length exceeding 6 characters
+    if (rawValue.length > 6) {
+      return;
+    }
+
+    setVerification({ ...verification, phoneOtp: value });
+  };
+
+  
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
       <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-4">
@@ -34,7 +49,7 @@ export default function HospitalVerificationCard({ verification, setVerification
             <div className="space-y-2 mt-2">
               {verification.emailMsg ? (
                 <div className="flex gap-1.5">
-                  <input type="text" placeholder="Enter OTP" value={verification.emailOtp} onChange={e => handleInputChange('emailOtp', e.target.value, verification)} className="w-full px-2 py-1 text-xs border rounded focus:outline-none" />
+                  <input type="text" placeholder="Enter OTP" value={verification.emailOtp} onChange={e => handleEmailInputChange(e.target.value, verification)} className="w-full px-2 py-1 text-xs border rounded focus:outline-none" />
                   <button onClick={() => onVerifyOtp('email')} className="bg-blue-600 text-white px-2 py-1 text-xs font-medium rounded hover:bg-blue-700">Verify</button>
                 </div>
               ) : (
@@ -57,7 +72,7 @@ export default function HospitalVerificationCard({ verification, setVerification
             <div className="space-y-2 mt-2">
               {verification.phoneMsg ? (
                 <div className="flex gap-1.5">
-                  <input type="text" placeholder="Enter OTP" value={verification.phoneOtp} onChange={e => handleInputChange('phoneOtp', e.target.value, verification)} className="w-full px-2 py-1 text-xs border rounded focus:outline-none" />
+                  <input type="text" placeholder="Enter OTP" value={verification.phoneOtp} onChange={e => handleMobileInputChange(e.target.value, verification)} className="w-full px-2 py-1 text-xs border rounded focus:outline-none" />
                   <button onClick={() => onVerifyOtp('phone')} className="bg-blue-600 text-white px-2 py-1 text-xs font-medium rounded hover:bg-blue-700">Verify</button>
                 </div>
               ) : (
