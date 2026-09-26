@@ -55,7 +55,7 @@ export default function HospitalAddressSection({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Building / House No.</label>
-              <input type="text" value={addressForm.houseNo} onChange={e => setAddressForm({...addressForm, houseNo: e.target.value})} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500" />
+              <input type="text" value={addressForm.house_no} onChange={e => setAddressForm({...addressForm, houseNo: e.target.value})} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500" />
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Street Address</label>
