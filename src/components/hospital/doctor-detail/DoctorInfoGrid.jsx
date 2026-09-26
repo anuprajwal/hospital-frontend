@@ -91,27 +91,6 @@ export default function DoctorInfoGrid({ doctor, profile }) {
           </div>
         </div>
       </div>
-
-      {/* Bank Info */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3">
-        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-          <CreditCard className="h-4 w-4 text-blue-600" /> Bank & Payout Information
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div>
-            <span className="block text-slate-400">Account Holder:</span>
-            <span className="font-semibold text-slate-800">{profile.beneficiary_name || 'N/A'}</span>
-          </div>
-          <div>
-            <span className="block text-slate-400">Account Number:</span>
-            <span className="font-semibold text-slate-800">{profile.account_number || 'N/A'}</span>
-          </div>
-          <div>
-            <span className="block text-slate-400">IFSC Code:</span>
-            <span className="font-semibold text-slate-800">{profile.ifsc_code || 'N/A'}</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
