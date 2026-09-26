@@ -56,20 +56,18 @@ export default function ExistingSlotConfigsList({ configResponse }) {
 
           {overallConfigs.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {overallConfigs.map((cfg, index) => (
-                <div key={index} className="p-3 bg-blue-50/50 border border-blue-200 rounded-lg flex justify-between items-center text-xs">
+                <div className="p-3 bg-blue-50/50 border border-blue-200 rounded-lg flex justify-between items-center text-xs">
                   <div>
                     <p className="font-semibold text-slate-700">Hospital Global Default</p>
                     <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                      <Clock className="h-3 w-3" /> {cfg.slot_time || cfg.slotTime || 'N/A'} mins
+                      <Clock className="h-3 w-3" /> {overallConfigs.slot_time || overallConfigs.slotTime || 'N/A'} mins
                     </p>
                   </div>
                   <span className="font-bold text-blue-700 flex items-center text-sm">
                     <IndianRupee className="h-3.5 w-3.5" />
-                    {cfg.slot_fee ?? cfg.slotFee ?? '0'}
+                    {overallConfigs.slot_fee ?? overallConfigs.slotFee ?? '0'}
                   </span>
                 </div>
-              ))}
             </div>
           ) : (
             <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-400">
