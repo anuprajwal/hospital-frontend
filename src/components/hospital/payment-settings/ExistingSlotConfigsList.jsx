@@ -2,19 +2,30 @@ import React from 'react';
 import { Stethoscope, User, Globe, Clock, IndianRupee } from 'lucide-react';
 
 /**
- * Safely parses stringified JSON or returns the input if already parsed.
+ * Robust JSON parser that handles null, undefined, plain arrays/objects,
+ * and double-stringified/escaped JSON strings.
  */
 const parseConfigData = (rawData) => {
-  if (!rawData) return [];
-  if (Array.isArray(rawData)) return rawData;
-  if (typeof rawData === 'object') return [rawData];
-  try {
-    const parsed = JSON.parse(rawData);
-    return Array.isArray(parsed) ? parsed : [parsed];
-  } catch (err) {
-    console.error('Failed to parse config JSON string:', err);
-    return [];
+  if (!rawData || rawData === 'null' || rawData === '[]' || rawData === '{}') return [];
+  
+  let current = rawData;
+
+  // Unroll double-stringified JSON if necessary
+  while (typeof current === 'string') {
+    try {
+      const parsed = JSON.parse(current);
+      if (parsed === current) break;
+      current = parsed;
+    } catch (err) {
+      console.error('Error parsing JSON string in parseConfigData:', err);
+      return [];
+    }
   }
+
+  if (Array.isArray(current)) return current;
+  if (typeof current === 'object' && current !== null) return [current];
+
+  return [];
 };
 
 export default function ExistingSlotConfigsList({ configResponse }) {
