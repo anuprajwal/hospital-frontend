@@ -28,7 +28,7 @@ export default function HospitalAddressSection({
                   pincode: address.pincode || '',
                   country: address.country || 'India',
                   landmark: address.landmark || '',
-                  houseNo: address.house_no || address.houseNo || ''
+                  houseNo: address.house_no
                 });
                 setIsEditingAddress(true);
               }} 

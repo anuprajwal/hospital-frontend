@@ -112,7 +112,15 @@ export default function ProfileManagement() {
       const addrList = addrRes.data?.addresses || addrRes.data?.address || [];
       if (Array.isArray(addrList) && addrList.length > 0) {
         const primaryAddr = addrList[0];
-        setAddress(primaryAddr);
+        setAddress({
+          street: primaryAddr.street || '',
+          city: primaryAddr.city || '',
+          state: primaryAddr.state || '',
+          pincode: primaryAddr.pincode || '',
+          country: primaryAddr.country || 'India',
+          landmark: primaryAddr.landmark || '',
+          houseNo: primaryAddr.house_no
+        });
         setAddressForm({
           street: primaryAddr.street || '',
           city: primaryAddr.city || '',
@@ -120,7 +128,7 @@ export default function ProfileManagement() {
           pincode: primaryAddr.pincode || '',
           country: primaryAddr.country || 'India',
           landmark: primaryAddr.landmark || '',
-          houseNo: primaryAddr.house_no || primaryAddr.houseNo || ''
+          houseNo: primaryAddr.house_no
         });
       } else {
         setAddress(null);
