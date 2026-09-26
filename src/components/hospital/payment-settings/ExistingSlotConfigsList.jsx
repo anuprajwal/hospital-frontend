@@ -7,11 +7,13 @@ import { Stethoscope, User, Globe, Clock, IndianRupee } from 'lucide-react';
  */
 const parseConfigData = (rawData) => {
   if (!rawData || rawData === 'null' || rawData === '[]' || rawData === '{}') return [];
-  
+  console.log('Parsing rawData:', rawData);
   let current = rawData;
+
 
   // Unroll double-stringified JSON if necessary
   while (typeof current === 'string') {
+    console.log('Current value before parsing:', current);
     try {
       const parsed = JSON.parse(current);
       if (parsed === current) break;
