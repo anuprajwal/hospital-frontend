@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { hospitalEndpoints as paymentsEndpoints } from '../../services/api';
 
-import ScopeSelector from './payment-settings/ScopeSelector';
-import SpecializationFilter from './payment-settings/SpecializationFilter';
-import DoctorSearchFilter from './payment-settings/DoctorSearchFilter';
-import FeeSlotConfigForm from './payment-settings/FeeSlotConfigForm';
-import PayoutLedgerCard from './payment-settings/PayoutLedgerCard';
+import ScopeSelector from './ScopeSelector';
+import SpecializationFilter from './SpecializationFilter';
+import DoctorSearchFilter from './DoctorSearchFilter';
+import FeeSlotConfigForm from './FeeSlotConfigForm';
+import PayoutLedgerCard from './PayoutLedgerCard';
+import ExistingSlotConfigsList from './ExistingSlotConfigsList';
 
 const calculateExperience = (establishmentYearString) => {
   if (!establishmentYearString) return 'N/A';
-  
   const estDate = new Date(establishmentYearString);
   const now = new Date();
-
   if (isNaN(estDate.getTime())) return 'N/A';
 
   let years = now.getFullYear() - estDate.getFullYear();
@@ -41,13 +40,16 @@ export default function PaymentsSettings() {
   const [profile, setProfile] = useState(null);
   const [calculatedExperience, setCalculatedExperience] = useState('');
 
-  // Doctor List for Direct Doctor Selection
+  // Doctor List for Direct Selection
   const [doctorsList, setDoctorsList] = useState([]);
   const [doctorSearchQuery, setDoctorSearchQuery] = useState('');
 
   // Config Core Inputs
   const [slotFee, setSlotFee] = useState('200');
   const [slotTime, setSlotTime] = useState('15');
+
+  // Active Raw Slot Config Response State
+  const [slotConfigResponse, setSlotConfigResponse] = useState(null);
 
   // Filter Mode Strategy: 'all' | 'specialization' | 'doctors'
   const [targetScope, setTargetScope] = useState('all');
@@ -79,17 +81,27 @@ export default function PaymentsSettings() {
         }
       }
 
-      // 2. Fetch Doctors List for Direct Doctor Selection
+      // 2. Fetch Doctors List
       const doctorsRes = await paymentsEndpoints.getDoctors();
       const docs = doctorsRes?.data?.doctors || doctorsRes?.data?.data || doctorsRes?.data || [];
       if (Array.isArray(docs)) {
         setDoctorsList(docs);
       }
 
-      // 3. Request to paymentsEndpoints.getDoctorSlotConfig as requested
+      // 3. Fetch Doctor Slot Config & Apply CASE 1 Defaults
       if (typeof paymentsEndpoints.getDoctorSlotConfig === 'function') {
         const slotConfigRes = await paymentsEndpoints.getDoctorSlotConfig();
-        console.log('Fetched Existing Doctor Slot Config:', slotConfigRes);
+        setSlotConfigResponse(slotConfigRes);
+
+        const overall = slotConfigRes?.data?.overall;
+        if (overall) {
+          let parsedOverall = typeof overall === 'string' ? JSON.parse(overall) : overall;
+          if (Array.isArray(parsedOverall) && parsedOverall.length > 0) {
+            parsedOverall = parsedOverall[0];
+          }
+          if (parsedOverall?.slot_fee !== undefined) setSlotFee(String(parsedOverall.slot_fee));
+          if (parsedOverall?.slot_time !== undefined) setSlotTime(String(parsedOverall.slot_time));
+        }
       }
     } catch (err) {
       console.error('Failed to load initial data:', err);
@@ -168,6 +180,7 @@ export default function PaymentsSettings() {
     try {
       await paymentsEndpoints.setDoctorsSlotConfig(payload);
       setSuccessMessage('Doctor slot configuration and fees updated successfully!');
+      fetchInitialData();
       setTimeout(() => setSuccessMessage(''), 4000);
     } catch (err) {
       console.error('Failed to update slot config:', err);
@@ -190,7 +203,6 @@ export default function PaymentsSettings() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Payments & Slot Configuration</h1>
@@ -207,7 +219,6 @@ export default function PaymentsSettings() {
         </button>
       </div>
 
-      {/* Notifications */}
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700 text-xs">
           <AlertCircle className="h-5 w-5 flex-shrink-0" />
@@ -221,6 +232,8 @@ export default function PaymentsSettings() {
           <span>{successMessage}</span>
         </div>
       )}
+
+      <ExistingSlotConfigsList configResponse={slotConfigResponse} />
 
       <form onSubmit={handleSaveConfig} className="space-y-6">
         <ScopeSelector
