@@ -178,8 +178,14 @@ export default function PaymentsSettings() {
     };
 
     try {
-      await paymentsEndpoints.setDoctorsSlotConfig(payload);
-      setSuccessMessage('Doctor slot configuration and fees updated successfully!');
+      const response = await paymentsEndpoints.setDoctorsSlotConfig(payload);
+      const resData = response?.data || {};
+      if (resData.updatedCount === 0) {
+        setError('No doctor was found matching the selected criteria.');
+        setSaving(false);
+        return;
+      }
+      setSuccessMessage('Doctor slot configuration and fees updated successfully! for ' + resData.updatedCount + ' doctor(s).');
       fetchInitialData();
       setTimeout(() => setSuccessMessage(''), 4000);
     } catch (err) {
