@@ -28,10 +28,9 @@ const parseConfigData = (rawData) => {
   return [];
 };
 
-export default function ExistingSlotConfigsList({ configResponse }) {
+export default function ExistingSlotConfigsList({ configResponse, targetScope }) {
   const configData = configResponse.data.data
 
-  const overallConfigs = parseConfigData(configData.overall);
   const specialisationConfigs = parseConfigData(configData.specialisation);
   const individualConfigs = parseConfigData(configData.individual);
 
@@ -45,43 +44,13 @@ export default function ExistingSlotConfigsList({ configResponse }) {
       </div>
 
       <div className="space-y-6">
-        {/* CASE 1: Overall / Global Settings */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Globe className="h-4 w-4 text-blue-600" />
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              1. Global Default (All Doctors)
-            </h3>
-          </div>
-
-          {overallConfigs ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                <div className="p-3 bg-blue-50/50 border border-blue-200 rounded-lg flex justify-between items-center text-xs">
-                  <div>
-                    <p className="font-semibold text-slate-700">Hospital Global Default</p>
-                    <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                      <Clock className="h-3 w-3" /> {overallConfigs.slot_time || 'N/A'} mins
-                    </p>
-                  </div>
-                  <span className="font-bold text-blue-700 flex items-center text-sm">
-                    <IndianRupee className="h-3.5 w-3.5" />
-                    {overallConfigs.slot_fee || '0'}
-                  </span>
-                </div>
-            </div>
-          ) : (
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-400">
-              No global fallback fee configured. Default workspace pricing applies.
-            </div>
-          )}
-        </div>
-
-        {/* CASE 2: Specializations Line-by-Line Breakdown */}
-        <div className="space-y-2">
+        {
+          targetScope === 'specialization' && (
+            <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Stethoscope className="h-4 w-4 text-emerald-600" />
             <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              2. Specialization Pricing Breakdown
+              Specialization Pricing Breakdown
             </h3>
           </div>
 
@@ -115,13 +84,16 @@ export default function ExistingSlotConfigsList({ configResponse }) {
             </div>
           )}
         </div>
+          )
+        }
 
-        {/* CASE 3: Individual Doctors Override List */}
-        <div className="space-y-2">
+        {
+          targetScope === 'doctors' && (
+            <div className="space-y-2">
           <div className="flex items-center gap-2">
             <User className="h-4 w-4 text-purple-600" />
             <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              3. Individual Doctor Overrides
+              Individual Doctor Overrides
             </h3>
           </div>
 
@@ -159,6 +131,8 @@ export default function ExistingSlotConfigsList({ configResponse }) {
             </div>
           )}
         </div>
+          )
+        }        
       </div>
     </div>
   );

@@ -233,7 +233,7 @@ export default function PaymentsSettings() {
         </div>
       )}
 
-      <ExistingSlotConfigsList configResponse={slotConfigResponse} />
+      <ExistingSlotConfigsList configResponse={slotConfigResponse} targetScope={targetScope} />
 
       <form onSubmit={handleSaveConfig} className="space-y-6">
         <ScopeSelector
