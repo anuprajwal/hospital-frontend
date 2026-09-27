@@ -7,7 +7,7 @@ import SpecializationFilter from './payment-settings/SpecializationFilter';
 import DoctorSearchFilter from './payment-settings/DoctorSearchFilter';
 import FeeSlotConfigForm from './payment-settings/FeeSlotConfigForm';
 import PayoutLedgerCard from './payment-settings/PayoutLedgerCard';
-import ExistingSlotConfigsList from './payment-settings/ExistingSlotConfigsList';
+
 
 const calculateExperience = (establishmentYearString) => {
   if (!establishmentYearString) return 'N/A';
@@ -233,8 +233,6 @@ export default function PaymentsSettings() {
         </div>
       )}
 
-      <ExistingSlotConfigsList configResponse={slotConfigResponse} targetScope={targetScope} />
-
       <form onSubmit={handleSaveConfig} className="space-y-6">
         <ScopeSelector
           targetScope={targetScope}
@@ -263,6 +261,8 @@ export default function PaymentsSettings() {
         )}
 
         <FeeSlotConfigForm
+          configResponse={slotConfigResponse}
+          targetScope={targetScope}
           slotFee={slotFee}
           setSlotFee={setSlotFee}
           slotTime={slotTime}

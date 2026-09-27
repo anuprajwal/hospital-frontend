@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sliders, Clock, Award, Save, RefreshCw } from 'lucide-react';
+import ExistingSlotConfigsList from './ExistingSlotConfigsList';
 
 const slotOptions = [
   { label: '15 mins', value: '15' },
@@ -10,6 +11,8 @@ const slotOptions = [
 ];
 
 export default function FeeSlotConfigForm({
+  configResponse,
+  targetScope,
   slotFee,
   setSlotFee,
   slotTime,
@@ -88,6 +91,8 @@ export default function FeeSlotConfigForm({
           </p>
         </div>
       </div>
+
+      <ExistingSlotConfigsList configResponse={configResponse} targetScope={targetScope} />
 
       {/* Action Button */}
       <div className="pt-4 border-t border-slate-100 flex justify-end">

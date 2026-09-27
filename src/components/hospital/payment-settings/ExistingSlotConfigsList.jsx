@@ -35,105 +35,110 @@ export default function ExistingSlotConfigsList({ configResponse, targetScope })
   const individualConfigs = parseConfigData(configData.individual);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-6">
-      <div className="border-b border-slate-100 pb-3">
-        <h2 className="text-base font-bold text-slate-800">Active Slot & Fee Configurations</h2>
-        <p className="text-xs text-slate-500 font-normal">
-          Overview of global settings, specialization rules, and individual doctor configurations.
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        {
-          targetScope === 'specialization' && (
-            <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Stethoscope className="h-4 w-4 text-emerald-600" />
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Specialization Pricing Breakdown
-            </h3>
+    
+      (targetScope === 'specialization' || targetScope === 'doctors') && (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-6">
+          <div className="border-b border-slate-100 pb-3">
+            <h2 className="text-base font-bold text-slate-800">Active Slot & Fee Configurations</h2>
+            <p className="text-xs text-slate-500 font-normal">
+              Overview of global settings, specialization rules, and individual doctor configurations.
+            </p>
           </div>
 
-          {specialisationConfigs.length > 0 ? (
-            <div className="divide-y divide-slate-100 border border-slate-200 rounded-lg bg-slate-50/50">
-              {specialisationConfigs.map((spec, index) => (
-                <div key={index} className="p-3 flex items-center justify-between text-xs hover:bg-white transition-colors">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-7 w-7 rounded-lg bg-emerald-100/70 text-emerald-700 flex items-center justify-center font-bold">
-                      <Stethoscope className="h-3.5 w-3.5" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-800">
-                        {spec.name || spec.specialisation || spec.department || 'Specialization'}
-                      </p>
-                      <p className="text-[11px] text-slate-400">
-                        Duration: {spec.slot_time || spec.slotTime || '15'} mins
-                      </p>
-                    </div>
-                  </div>
-                  <div className="font-bold text-slate-800 flex items-center text-sm bg-white px-2.5 py-1 rounded-md border border-slate-200">
-                    <IndianRupee className="h-3.5 w-3.5 text-slate-500" />
-                    {spec.slot_fee ?? spec.slotFee ?? '0'}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-400">
-              No department-level custom fees configured.
-            </div>
-          )}
-        </div>
-          )
-        }
+          <div className="space-y-6">
+            {
+              targetScope === 'specialization' && (
+                <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Stethoscope className="h-4 w-4 text-emerald-600" />
+                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Specialization Pricing Breakdown
+                </h3>
+              </div>
 
-        {
-          targetScope === 'doctors' && (
-            <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <User className="h-4 w-4 text-purple-600" />
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Individual Doctor Overrides
-            </h3>
-          </div>
-
-          {individualConfigs.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {individualConfigs.map((doc, index) => (
-                <div key={doc.email || index} className="p-3.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between text-xs shadow-2xs">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
-                      {doc.name ? doc.name.charAt(0).toUpperCase() : 'D'}
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-800">{doc.name || 'Doctor'}</p>
-                      <p className="text-[11px] text-slate-400">{doc.email}</p>
-                      <div className="flex items-center gap-1.5 mt-1 text-[10px] text-slate-500 font-medium">
-                        <Clock className="h-3 w-3 text-slate-400" />
-                        <span>Slot: {doc.slot_time} mins</span>
+              {specialisationConfigs.length > 0 ? (
+                <div className="divide-y divide-slate-100 border border-slate-200 rounded-lg bg-slate-50/50">
+                  {specialisationConfigs.map((spec, index) => (
+                    <div key={index} className="p-3 flex items-center justify-between text-xs hover:bg-white transition-colors">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-7 w-7 rounded-lg bg-emerald-100/70 text-emerald-700 flex items-center justify-center font-bold">
+                          <Stethoscope className="h-3.5 w-3.5" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-800">
+                            {spec.name || spec.specialisation || spec.department || 'Specialization'}
+                          </p>
+                          <p className="text-[11px] text-slate-400">
+                            Duration: {spec.slot_time || spec.slotTime || '15'} mins
+                          </p>
+                        </div>
+                      </div>
+                      <div className="font-bold text-slate-800 flex items-center text-sm bg-white px-2.5 py-1 rounded-md border border-slate-200">
+                        <IndianRupee className="h-3.5 w-3.5 text-slate-500" />
+                        {spec.slot_fee ?? spec.slotFee ?? '0'}
                       </div>
                     </div>
-                  </div>
-
-                  <div className="text-right">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Fee</span>
-                    <span className="font-bold text-purple-700 text-sm flex items-center justify-end">
-                      <IndianRupee className="h-3.5 w-3.5" />
-                      {doc.slot_fee}
-                    </span>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-400">
+                  No department-level custom fees configured.
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-400">
-              No individual doctor fee overrides set.
+              )
+            }
+
+            {
+              targetScope === 'doctors' && (
+                <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-purple-600" />
+                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Individual Doctor Overrides
+                </h3>
+              </div>
+
+              {individualConfigs.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {individualConfigs.map((doc, index) => (
+                    <div key={doc.email || index} className="p-3.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between text-xs shadow-2xs">
+                      <div className="flex items-center gap-3">
+                        <div className="h-9 w-9 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+                          {doc.name ? doc.name.charAt(0).toUpperCase() : 'D'}
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-800">{doc.name || 'Doctor'}</p>
+                          <p className="text-[11px] text-slate-400">{doc.email}</p>
+                          <div className="flex items-center gap-1.5 mt-1 text-[10px] text-slate-500 font-medium">
+                            <Clock className="h-3 w-3 text-slate-400" />
+                            <span>Slot: {doc.slot_time} mins</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Fee</span>
+                        <span className="font-bold text-purple-700 text-sm flex items-center justify-end">
+                          <IndianRupee className="h-3.5 w-3.5" />
+                          {doc.slot_fee}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-400">
+                  No individual doctor fee overrides set.
+                </div>
+              )}
             </div>
-          )}
+              )
+            }        
+          </div>
         </div>
-          )
-        }        
-      </div>
-    </div>
+      )
+    
+    
   );
 }
