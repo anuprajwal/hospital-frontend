@@ -139,6 +139,8 @@ export default function PaymentsSettings() {
   };
 
   const filteredDoctors = doctorsList.filter((doc) => {
+    if (doc.doctorProfile.organisation_id === null) return false; // Exclude doctors without an associated organization
+    if (!doctorSearchQuery) return true;
     const q = doctorSearchQuery.toLowerCase();
     const username = (doc.username || '').toLowerCase();
     const email = (doc.email || '').toLowerCase();
