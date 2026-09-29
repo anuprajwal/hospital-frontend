@@ -10,6 +10,7 @@ import { ShieldCheck, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 export default function HospitalKycAndBankingPage() {
   console.log('[CHECKPOINT 1] Component Rendered');
+  setTimeout(() => console.log('[CHECKPOINT 1] Component Rendered - Timeout Log'), 2000);
 
   const [hospitalId, setHospitalId] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
