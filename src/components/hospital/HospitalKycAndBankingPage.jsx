@@ -8,9 +8,9 @@ import KycStatusBanner from './kyc/KycStatusBanner';
 import KycSubmissionForm from './kyc/KycSubmissionForm';
 import { ShieldCheck, CheckCircle, Clock, XCircle } from 'lucide-react';
 
-export default function HospitalKycAndBankingPage() {
+export default async function HospitalKycAndBankingPage() {
   console.log('[CHECKPOINT 1] Component Rendered');
-  setTimeout(() => console.log('[CHECKPOINT 1] Component Rendered - Timeout Log'), 2000);
+  await setTimeout(() => console.log('[CHECKPOINT 1] Component Rendered - Timeout Log'), 2000);
 
   const [hospitalId, setHospitalId] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
