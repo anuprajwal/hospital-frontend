@@ -17,7 +17,6 @@ export default function HospitalKycAndBankingPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [status, setStatus] = useState({ error: null, success: null });
 
-  
   const [initialBankData, setInitialBankData] = useState({
     account_number: '',
     beneficiary_name: '',
@@ -36,6 +35,15 @@ export default function HospitalKycAndBankingPage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [status.error, status.success]);
+
+  // MOVED HERE: Always call hooks at the top level before conditional returns!
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log('[CHECKPOINT 1] Component Rendered - 2 Second Timeout Completed');
+    }, 2000);
+
+    return () => clearTimeout(timer); // Cleanup timer on unmount
+  }, []);
 
   const fetchLiveKycStatus = useCallback(async (id) => {
     console.log('[CHECKPOINT 3] fetchLiveKycStatus called with ID:', id);
@@ -166,6 +174,7 @@ export default function HospitalKycAndBankingPage() {
     }
   };
 
+  // Early return comes AFTER all hook calls
   if (pageLoading) {
     return (
       <div className="py-24 flex justify-center">
@@ -174,17 +183,7 @@ export default function HospitalKycAndBankingPage() {
     );
   }
 
-
-  // Correct place for async operations or delays
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('[CHECKPOINT 1] Component Rendered - 2 Second Timeout Completed');
-    }, 2000);
-
-    return () => clearTimeout(timer); // Cleanup timer on unmount
-  }, []);
-
-    return (
+  return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Hospital KYC & Payments Setup</h1>
@@ -250,5 +249,4 @@ export default function HospitalKycAndBankingPage() {
       </div>
     </div>
   );
-
 }
