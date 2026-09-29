@@ -1,17 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { hospitalEndpoints } from '../../services/api';
 import { paymentService } from '../../services/paymentApi';
 import Alert from '../ui/Alert';
 import Loader from '../ui/Loader';
-import BankDetailsForm from './kyc/BankDetailsForm';
-import KycStatusBanner from './kyc/KycStatusBanner';
-import KycSubmissionForm from './kyc/KycSubmissionForm';
+import BankDetailsForm from '../components/hospital/BankDetailsForm';
+import KycStatusBanner from '../components/hospital/KycStatusBanner';
+import KycSubmissionForm from '../components/hospital/KycSubmissionForm';
 import { ShieldCheck, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 export default function HospitalKycAndBankingPage() {
+  console.log('[CHECKPOINT 1] Component Rendered');
+
   const [hospitalId, setHospitalId] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
-  const [kycStatus, setKycStatus] = useState('unsubmitted'); // 'unsubmitted' | 'pending' | 'verified' | 'rejected'
+  const [kycStatus, setKycStatus] = useState('unsubmitted');
   const [actionLoading, setActionLoading] = useState(false);
   const [status, setStatus] = useState({ error: null, success: null });
 
@@ -23,17 +25,19 @@ export default function HospitalKycAndBankingPage() {
 
   const [initialKycForm, setInitialKycForm] = useState(null);
 
-  // Prevent duplicate execution on mount
-  const hasFetched = useRef(false);
+  // Hard Guard: Ensures mount effect runs EXACTLY ONCE
+  const isFetchedRef = useRef(false);
 
-  // Smooth scroll to top when status message changes
+  // Checkpoint 2: Check window scroll triggers
   useEffect(() => {
     if (status.error || status.success) {
+      console.log('[CHECKPOINT 2] Status alert triggered smooth scroll');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [status.error, status.success]);
 
-  const fetchLiveKycStatus = async (id) => {
+  const fetchLiveKycStatus = useCallback(async (id) => {
+    console.log('[CHECKPOINT 3] fetchLiveKycStatus called with ID:', id);
     try {
       const res = await paymentService.getHospitalOnboardingStatus(id);
       if (res.data?.success) {
@@ -43,20 +47,25 @@ export default function HospitalKycAndBankingPage() {
         setKycStatus('unsubmitted');
       }
     } catch (err) {
+      console.error('[CHECKPOINT 3 - ERROR] KYC status fetch error:', err);
       setKycStatus('unsubmitted');
     }
-  };
+  }, []);
 
+  // Checkpoint 4: Data Loader Effect (Strict single-run guard)
   useEffect(() => {
-    // Ensure initial load runs strictly ONCE on mount
-    if (hasFetched.current) return;
-    hasFetched.current = true;
+    if (isFetchedRef.current) {
+      console.log('[CHECKPOINT 4] Data already fetched, skipping duplicate load');
+      return;
+    }
+    isFetchedRef.current = true;
+    console.log('[CHECKPOINT 4] Starting initial data load execution');
 
     const loadHospitalData = async () => {
       setPageLoading(true);
       setStatus({ error: null, success: null });
       try {
-        // 1. Fetch Profile Info
+        console.log('[CHECKPOINT 5] Fetching Hospital Profile...');
         const profileRes = await hospitalEndpoints.getProfile();
         const userData = profileRes.data?.userData || {};
         const orgProfile = userData.organisationProfile || {};
@@ -70,21 +79,22 @@ export default function HospitalKycAndBankingPage() {
             beneficiary_name: orgProfile.beneficiary_name || '',
             ifsc_code: orgProfile.ifsc_code || ''
           };
+          console.log('[CHECKPOINT 6] Setting Bank Details State');
           setInitialBankData(initialBank);
 
-          // 2. Fetch Address for Pre-fill
           let primaryAddress = {};
           try {
+            console.log('[CHECKPOINT 7] Fetching Address...');
             const addrRes = await hospitalEndpoints.getAddress();
             const addrList = addrRes.data?.addresses || addrRes.data?.address || [];
             if (Array.isArray(addrList) && addrList.length > 0) {
               primaryAddress = addrList[0];
             }
           } catch (e) {
-            console.log(e);
+            console.warn('[CHECKPOINT 7 - WARN] Address fetch skipped/failed', e);
           }
 
-          // Pre-fill KYC form object
+          console.log('[CHECKPOINT 8] Setting Initial KYC Form State');
           setInitialKycForm({
             legal_business_name: orgProfile.organisation_name || '',
             contact_name: userData.username || '',
@@ -101,20 +111,23 @@ export default function HospitalKycAndBankingPage() {
           await fetchLiveKycStatus(currentHospitalId);
         }
       } catch (err) {
+        console.error('[CHECKPOINT 9 - ERROR] Primary load caught error:', err);
         setStatus({
           error: err.response?.data?.message || 'Failed to retrieve hospital onboarding credentials.',
           success: null
         });
         setKycStatus('unsubmitted');
       } finally {
+        console.log('[CHECKPOINT 10] Finishing load - setPageLoading(false)');
         setPageLoading(false);
       }
     };
 
     loadHospitalData();
-  }, []);
+  }, [fetchLiveKycStatus]);
 
   const handleBankSubmit = async (bankData) => {
+    console.log('[CHECKPOINT 11] Bank form submitted', bankData);
     setStatus({ error: null, success: null });
     setActionLoading(true);
     try {
@@ -128,6 +141,7 @@ export default function HospitalKycAndBankingPage() {
   };
 
   const handleKycSubmit = async (kycForm) => {
+    console.log('[CHECKPOINT 12] KYC form submitted', kycForm);
     if (!hospitalId) return;
     setStatus({ error: null, success: null });
     setActionLoading(true);
@@ -138,12 +152,12 @@ export default function HospitalKycAndBankingPage() {
         setKycStatus(res.data.kyc_status || 'pending');
         setStatus({
           error: null,
-          success: 'Hospital KYC details submitted successfully! Razorpay compliance review is in progress.'
+          success: 'Hospital KYC details submitted successfully!'
         });
       }
     } catch (err) {
       setStatus({
-        error: err.response?.data?.error?.error?.description || 'KYC submission failed. Please verify your business and bank details.',
+        error: err.response?.data?.error?.error?.description || 'KYC submission failed.',
         success: null
       });
     } finally {
@@ -170,14 +184,12 @@ export default function HospitalKycAndBankingPage() {
 
       <Alert type={status.success ? 'success' : 'error'} message={status.success || status.error} />
 
-      {/* 1. Settlement Bank Account Form Module */}
       <BankDetailsForm
         initialBankData={initialBankData}
         onSubmit={handleBankSubmit}
         loading={actionLoading}
       />
 
-      {/* 2. Razorpay KYC Compliance Card */}
       <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-4 gap-2">
           <div className="flex items-center gap-2">
@@ -186,9 +198,6 @@ export default function HospitalKycAndBankingPage() {
               <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wide">
                 Razorpay Merchant KYC
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Complete institutional identity verification to activate live merchant payment routing.
-              </p>
             </div>
           </div>
           <div>
@@ -215,13 +224,11 @@ export default function HospitalKycAndBankingPage() {
           </div>
         </div>
 
-        {/* Status Messages */}
         <KycStatusBanner
           kycStatus={kycStatus}
           onCheckStatus={() => fetchLiveKycStatus(hospitalId)}
         />
 
-        {/* Submission Form Component */}
         {(kycStatus === 'unsubmitted' || kycStatus === 'rejected') && (
           <KycSubmissionForm
             initialForm={initialKycForm}
