@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { hospitalEndpoints } from '../../services/api';
 import { paymentService } from '../../services/paymentApi';
 import Alert from '../ui/Alert';
 import Loader from '../ui/Loader';
-import BankDetailsForm from './kyc/BankDetailsForm';
-import KycStatusBanner from './kyc/KycStatusBanner';
-import KycSubmissionForm from './kyc/KycSubmissionForm';
+import BankDetailsForm from '../components/hospital/BankDetailsForm';
+import KycStatusBanner from '../components/hospital/KycStatusBanner';
+import KycSubmissionForm from '../components/hospital/KycSubmissionForm';
 import { ShieldCheck, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 export default function HospitalKycAndBankingPage() {
@@ -21,16 +21,19 @@ export default function HospitalKycAndBankingPage() {
     ifsc_code: ''
   });
 
-  const [initialKycForm, setInitialKycForm] = useState({});
+  const [initialKycForm, setInitialKycForm] = useState(null);
 
-  // Fix infinite scroll re-render trigger: scroll on status change safely
+  // Prevent duplicate execution on mount
+  const hasFetched = useRef(false);
+
+  // Smooth scroll to top when status message changes
   useEffect(() => {
     if (status.error || status.success) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [status]);
+  }, [status.error, status.success]);
 
-  const fetchLiveKycStatus = useCallback(async (id) => {
+  const fetchLiveKycStatus = async (id) => {
     try {
       const res = await paymentService.getHospitalOnboardingStatus(id);
       if (res.data?.success) {
@@ -42,71 +45,74 @@ export default function HospitalKycAndBankingPage() {
     } catch (err) {
       setKycStatus('unsubmitted');
     }
-  }, []);
-
-  const loadHospitalData = useCallback(async () => {
-    setPageLoading(true);
-    setStatus({ error: null, success: null });
-    try {
-      // 1. Fetch Profile Info
-      const profileRes = await hospitalEndpoints.getProfile();
-      const userData = profileRes.data?.userData || {};
-      const orgProfile = userData.organisationProfile || {};
-      const currentHospitalId = userData.id;
-
-      if (currentHospitalId) {
-        setHospitalId(currentHospitalId);
-
-        // Bank data fallback
-        const initialBank = {
-          account_number: orgProfile.account_number || '',
-          beneficiary_name: orgProfile.beneficiary_name || '',
-          ifsc_code: orgProfile.ifsc_code || ''
-        };
-        setInitialBankData(initialBank);
-
-        // 2. Fetch Address for Pre-fill
-        let primaryAddress = {};
-        try {
-          const addrRes = await hospitalEndpoints.getAddress();
-          const addrList = addrRes.data?.addresses || addrRes.data?.address || [];
-          if (Array.isArray(addrList) && addrList.length > 0) {
-            primaryAddress = addrList[0];
-          }
-        } catch (e) {
-          console.log(e);
-        }
-
-        // Pre-fill KYC form object
-        setInitialKycForm({
-          legal_business_name: orgProfile.organisation_name || '',
-          contact_name: userData.username || '',
-          business_type: 'individual',
-          address_line1: primaryAddress.street ? `${primaryAddress.house_no ? primaryAddress.house_no + ', ' : ''}${primaryAddress.street}` : '',
-          city: primaryAddress.city || '',
-          state: primaryAddress.state || '',
-          postal_code: primaryAddress.pincode || '',
-          beneficiary_name: initialBank.beneficiary_name || '',
-          account_number: initialBank.account_number || '',
-          ifsc_code: initialBank.ifsc_code || ''
-        });
-
-        await fetchLiveKycStatus(currentHospitalId);
-      }
-    } catch (err) {
-      setStatus({
-        error: err.response?.data?.message || 'Failed to retrieve hospital onboarding credentials.',
-        success: null
-      });
-      setKycStatus('unsubmitted');
-    } finally {
-      setPageLoading(false);
-    }
-  }, [fetchLiveKycStatus]);
+  };
 
   useEffect(() => {
+    // Ensure initial load runs strictly ONCE on mount
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const loadHospitalData = async () => {
+      setPageLoading(true);
+      setStatus({ error: null, success: null });
+      try {
+        // 1. Fetch Profile Info
+        const profileRes = await hospitalEndpoints.getProfile();
+        const userData = profileRes.data?.userData || {};
+        const orgProfile = userData.organisationProfile || {};
+        const currentHospitalId = userData.id;
+
+        if (currentHospitalId) {
+          setHospitalId(currentHospitalId);
+
+          const initialBank = {
+            account_number: orgProfile.account_number || '',
+            beneficiary_name: orgProfile.beneficiary_name || '',
+            ifsc_code: orgProfile.ifsc_code || ''
+          };
+          setInitialBankData(initialBank);
+
+          // 2. Fetch Address for Pre-fill
+          let primaryAddress = {};
+          try {
+            const addrRes = await hospitalEndpoints.getAddress();
+            const addrList = addrRes.data?.addresses || addrRes.data?.address || [];
+            if (Array.isArray(addrList) && addrList.length > 0) {
+              primaryAddress = addrList[0];
+            }
+          } catch (e) {
+            console.log(e);
+          }
+
+          // Pre-fill KYC form object
+          setInitialKycForm({
+            legal_business_name: orgProfile.organisation_name || '',
+            contact_name: userData.username || '',
+            business_type: 'individual',
+            address_line1: primaryAddress.street ? `${primaryAddress.house_no ? primaryAddress.house_no + ', ' : ''}${primaryAddress.street}` : '',
+            city: primaryAddress.city || '',
+            state: primaryAddress.state || '',
+            postal_code: primaryAddress.pincode || '',
+            beneficiary_name: initialBank.beneficiary_name || '',
+            account_number: initialBank.account_number || '',
+            ifsc_code: initialBank.ifsc_code || ''
+          });
+
+          await fetchLiveKycStatus(currentHospitalId);
+        }
+      } catch (err) {
+        setStatus({
+          error: err.response?.data?.message || 'Failed to retrieve hospital onboarding credentials.',
+          success: null
+        });
+        setKycStatus('unsubmitted');
+      } finally {
+        setPageLoading(false);
+      }
+    };
+
     loadHospitalData();
-  }, [loadHospitalData]);
+  }, []);
 
   const handleBankSubmit = async (bankData) => {
     setStatus({ error: null, success: null });
