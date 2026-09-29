@@ -3,9 +3,9 @@ import { hospitalEndpoints } from '../../services/api';
 import { paymentService } from '../../services/paymentApi';
 import Alert from '../ui/Alert';
 import Loader from '../ui/Loader';
-import BankDetailsForm from '../components/hospital/BankDetailsForm';
-import KycStatusBanner from '../components/hospital/KycStatusBanner';
-import KycSubmissionForm from '../components/hospital/KycSubmissionForm';
+import BankDetailsForm from './kyc/BankDetailsForm';
+import KycStatusBanner from './kyc/KycStatusBanner';
+import KycSubmissionForm from './kyc/KycSubmissionForm';
 import { ShieldCheck, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 export default function HospitalKycAndBankingPage() {
