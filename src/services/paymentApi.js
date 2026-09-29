@@ -15,14 +15,10 @@ const makeRequest = async (endpoint, options = {}) => {
     ...options.headers,
   };
 
-  const token = getCookieToken();
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
   const config = {
     ...options,
     headers,
+    credentials: 'include', 
   };
 
   if (options.body && typeof options.body === 'object') {
@@ -39,9 +35,14 @@ const makeRequest = async (endpoint, options = {}) => {
     }
 
     if (!response.ok) {
-      if (response.status === 401 || (responseData && responseData.error === 'jwt expired')) {
-        document.cookie = 'auth_token=; path=/; domain=.docapp.co.in; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-        window.location.reload();
+      if (
+        response.status === 401 || 
+        response.status === 403 || 
+        (responseData && responseData.error === 'jwt expired')
+      ) {
+        
+        window.location.href = 'https://auth.docapp.co.in';
+        return;
       }
       const error = new Error(responseData?.message || `HTTP Exception: ${response.status}`);
       error.response = { data: responseData, status: response.status };
@@ -56,6 +57,8 @@ const makeRequest = async (endpoint, options = {}) => {
     throw error;
   }
 };
+
+
 
 export const paymentService = {
   // Hospital KYC & Onboarding Endpoints
