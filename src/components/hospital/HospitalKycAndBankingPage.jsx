@@ -99,7 +99,7 @@ export default function HospitalKycAndBankingPage() {
         success: null
       });
       setKycStatus('unsubmitted');
-    } fontally {
+    } finally {
       setPageLoading(false);
     }
   }, [fetchLiveKycStatus]);
