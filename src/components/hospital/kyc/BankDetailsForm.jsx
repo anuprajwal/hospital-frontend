@@ -9,10 +9,10 @@ export default function BankDetailsForm({ initialBankData, onSubmit, loading }) 
   });
 
   useEffect(() => {
-    if (initialBankData) {
-      setBankData(initialBankData);
-    }
-  }, [initialBankData]);
+  if (initialBankData && initialBankData.account_number) {
+    setBankData(initialBankData);
+  }
+}, [initialBankData.account_number, initialBankData.beneficiary_name, initialBankData.ifsc_code]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

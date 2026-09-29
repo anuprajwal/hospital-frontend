@@ -20,10 +20,10 @@ export default function KycSubmissionForm({ initialForm, onSubmit, loading }) {
   });
 
   useEffect(() => {
-    if (initialForm) {
-      setKycForm(prev => ({ ...prev, ...initialForm }));
-    }
-  }, [initialForm]);
+  if (initialForm && Object.keys(initialForm).length > 0) {
+    setKycForm(prev => ({ ...prev, ...initialForm }));
+  }
+}, [initialForm]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
