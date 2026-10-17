@@ -32,7 +32,7 @@ export default function ProfileManagement() {
     pincode: '',
     country: 'India',
     landmark: '',
-    house_no: ''
+    houseNo: ''
   });
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [bank, setBank] = useState({ account_number: '', beneficiary_name: '', ifsc_code: '' });
@@ -120,7 +120,7 @@ export default function ProfileManagement() {
           pincode: primaryAddr.pincode || '',
           country: primaryAddr.country || 'India',
           landmark: primaryAddr.landmark || '',
-          house_no: primaryAddr.house_no
+          houseNo: primaryAddr.house_no
         });
         setAddressForm({
           street: primaryAddr.street || '',
@@ -192,7 +192,7 @@ export default function ProfileManagement() {
       await hospitalEndpoints.deleteAddress(String(address.id));
       setSuccess('Address deleted successfully.');
       setAddress(null);
-      setAddressForm({ street: '', city: '', state: '', pincode: '', country: 'India', landmark: '', house_no: '' });
+      setAddressForm({ street: '', city: '', state: '', pincode: '', country: 'India', landmark: '', houseNo: '' });
     } catch (err) { setError(err.message); }
   };
 

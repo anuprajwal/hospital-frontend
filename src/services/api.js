@@ -12,7 +12,6 @@ const makeRequest = async (endpoint, options = {}) => {
   const config = {
     ...options,
     headers,
-    // CRITICAL: Automatically sends the HttpOnly cookie with cross-subdomain requests
     credentials: 'include', 
   };
 
@@ -36,7 +35,7 @@ const makeRequest = async (endpoint, options = {}) => {
         (responseData && responseData.error === 'jwt expired')
       ) {
         
-        window.location.href = 'https://auth.docapp.co.in';
+        window.location.href = 'https://auth.docapp.co.in/hospital/login';
         return;
       }
       
